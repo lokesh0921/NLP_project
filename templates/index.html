@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Language Detector</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span class="logo-icon">🌐</span>
+          <span>Language Detector</span>
+        </div>
+
+        <p class="subtitle">Detect the language of your text instantly</p>
+      </header>
+
+      <!-- Main Card -->
+      <main class="main-card">
+        <div class="card-header">
+          <h1>Language Detection</h1>
+
+          <p>Enter text below and our NLP model will identify the language.</p>
+        </div>
+
+        <!-- Text Input -->
+        <div class="input-section">
+          <label for="textInput"> Enter your text </label>
+
+          <textarea
+            id="textInput"
+            placeholder="Type or paste your text here..."
+            maxlength="5000"
+          ></textarea>
+
+          <div class="input-footer">
+            <span id="charCount"> 0 / 5000 </span>
+
+            <button class="clear-btn" onclick="clearText()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Detect Button -->
+        <button class="detect-btn" id="detectBtn" onclick="detectLanguage()">
+          <span>Detect Language</span>
+        </button>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+
+          <span> Analyzing your text... </span>
+        </div>
+
+        <!-- Result -->
+        <div class="result-card" id="resultCard">
+          <div class="result-label">DETECTED LANGUAGE</div>
+
+          <div class="language-result" id="languageResult"></div>
+
+          <div class="confidence" id="confidenceResult"></div>
+
+          <div class="confidence-bar">
+            <div class="confidence-fill" id="confidenceFill"></div>
+          </div>
+        </div>
+
+        <!-- Future Image Section -->
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <!-- chaning --1>-->
+
+        <div class="image-section">
+          <div class="image-icon">🖼️</div>
+
+          <h2>Detect from an Image</h2>
+
+          <p>
+            Upload an image containing text and we'll extract the text and
+            detect its language.
+          </p>
+
+          <!-- Hidden file input -->
+
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/png, image/jpeg, image/jpg"
+            hidden
+          />
+
+          <button
+            class="upload-btn"
+            onclick="document.getElementById('imageInput').click()"
+          >
+            Choose Image
+          </button>
+
+          <!-- Selected filename -->
+
+          <p class="file-name" id="fileName"></p>
+
+          <!-- Image preview -->
+
+          <img id="imagePreview" class="image-preview" alt="Image Preview" />
+
+          <!-- OCR button -->
+
+          <button class="ocr-btn" id="ocrBtn" onclick="detectFromImage()">
+            Extract Text & Detect Language
+          </button>
+
+          <!-- Image loading -->
+
+          <div class="image-loading" id="imageLoading">
+            <div class="spinner"></div>
+
+            <span> Extracting text from image... </span>
+          </div>
+
+          <!-- OCR Result -->
+
+          <div class="ocr-result" id="ocrResult">
+            <h3>Extracted Text</h3>
+
+            <div class="extracted-text" id="extractedText"></div>
+
+            <div class="image-language" id="imageLanguage"></div>
+
+            <div class="image-confidence" id="imageConfidence"></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <p>NLP Language Detection Project</p>
+
+        <p class="languages">Supports 17 languages</p>
+      </footer>
+    </div>
+
+    <script>
+      const textInput = document.getElementById("textInput");
+
+      const charCount = document.getElementById("charCount");
+
+      const loading = document.getElementById("loading");
+
+      const resultCard = document.getElementById("resultCard");
+
+      const languageResult = document.getElementById("languageResult");
+
+      const confidenceResult = document.getElementById("confidenceResult");
+
+      const confidenceFill = document.getElementById("confidenceFill");
+
+      const detectBtn = document.getElementById("detectBtn");
+
+      // Character counter
+      textInput.addEventListener("input", function () {
+        charCount.innerText = `${textInput.value.length} / 5000`;
+      });
+
+      // Detect language
+      async function detectLanguage() {
+        const text = textInput.value.trim();
+
+        // Empty input
+        if (!text) {
+          alert("Please enter some text first.");
+
+          return;
+        }
+
+        // Hide previous result
+        resultCard.classList.remove("show");
+
+        // Show loading
+        loading.classList.add("show");
+
+        detectBtn.disabled = true;
+
+        try {
+          const response = await fetch("/predict", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              text: text,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.error) {
+            alert(data.error);
+
+            return;
+          }
+
+          // Display language
+          languageResult.innerText = getLanguageDisplay(data.language);
+
+          // Display confidence
+          confidenceResult.innerText = `Confidence: ${data.confidence}%`;
+
+          // Confidence bar
+          confidenceFill.style.width = `${data.confidence}%`;
+
+          // Show result
+          resultCard.classList.add("show");
+        } catch (error) {
+          alert("Something went wrong. Please try again.");
+
+          console.error(error);
+        } finally {
+          loading.classList.remove("show");
+
+          detectBtn.disabled = false;
+        }
+      }
+
+      // Language names + flags
+      function getLanguageDisplay(language) {
+        const languages = {
+          English: "🇬🇧 English",
+
+          French: "🇫🇷 French",
+
+          German: "🇩🇪 German",
+
+          Spanish: "🇪🇸 Spanish",
+
+          Russian: "🇷🇺 Russian",
+
+          Italian: "🇮🇹 Italian",
+
+          Portuguese: "🇵🇹 Portuguese",
+
+          Dutch: "🇳🇱 Dutch",
+
+          Greek: "🇬🇷 Greek",
+
+          Turkish: "🇹🇷 Turkish",
+
+          Arabic: "🇸🇦 Arabic",
+
+          Hindi: "🇮🇳 Hindi",
+
+          Malayalam: "🇮🇳 Malayalam",
+
+          Tamil: "🇮🇳 Tamil",
+
+          Kannada: "🇮🇳 Kannada",
+
+          Danish: "🇩🇰 Danish",
+
+          Sweedish: "🇸🇪 Swedish",
+        };
+
+        return languages[language] || language;
+      }
+
+      // Clear text
+      function clearText() {
+        textInput.value = "";
+
+        charCount.innerText = "0 / 5000";
+
+        resultCard.classList.remove("show");
+      }
+
+      // Temporary image button
+      function showComingSoon() {
+        const message = document.getElementById("comingSoon");
+
+        message.classList.add("show");
+      }
+
+      // ==========================================
+      // IMAGE UPLOAD
+      // ==========================================
+
+      const imageInput = document.getElementById("imageInput");
+
+      const fileName = document.getElementById("fileName");
+
+      const imagePreview = document.getElementById("imagePreview");
+
+      const ocrResult = document.getElementById("ocrResult");
+
+      const extractedText = document.getElementById("extractedText");
+
+      const imageLanguage = document.getElementById("imageLanguage");
+
+      const imageConfidence = document.getElementById("imageConfidence");
+
+      const imageLoading = document.getElementById("imageLoading");
+
+      // ------------------------------------------
+      // Show selected image
+      // ------------------------------------------
+
+      imageInput.addEventListener("change", function () {
+        const file = imageInput.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        fileName.innerText = file.name;
+
+        // Preview image
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          imagePreview.src = event.target.result;
+
+          imagePreview.classList.add("show");
+        };
+
+        reader.readAsDataURL(file);
+
+        // Hide old result
+
+        ocrResult.classList.remove("show");
+      });
+
+      // ------------------------------------------
+      // OCR + Language Detection
+      // ------------------------------------------
+
+      async function detectFromImage() {
+        const file = imageInput.files[0];
+
+        if (!file) {
+          alert("Please choose an image first.");
+
+          return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("image", file);
+
+        // Show loading
+
+        imageLoading.classList.add("show");
+
+        try {
+          const response = await fetch("/predict-image", {
+            method: "POST",
+
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          if (data.error) {
+            alert(data.error);
+
+            return;
+          }
+
+          // Extracted text
+
+          extractedText.innerText = data.extracted_text;
+
+          // Language
+
+          imageLanguage.innerText = getLanguageDisplay(data.language);
+
+          // Confidence
+
+          imageConfidence.innerText = `Confidence: ${data.confidence}%`;
+
+          // Show result
+
+          ocrResult.classList.add("show");
+        } catch (error) {
+          console.error(error);
+
+          alert("Something went wrong while processing the image.");
+        } finally {
+          imageLoading.classList.remove("show");
+        }
+      }
+    </script>
+  </body>
+</html>
