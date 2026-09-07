@@ -6,14 +6,14 @@ image, extract its text using OCR, and then detect the language.
 
 ## Features
 
--   Direct text-based language detection
--   Image upload and OCR
--   Extracted-text display
--   TF-IDF character n-gram feature extraction
--   Logistic Regression multi-class classification
--   Confidence/probability display
--   Flask web application
--   17 supported languages
+- Direct text-based language detection
+- Image upload and OCR
+- Extracted-text display
+- TF-IDF character n-gram feature extraction
+- Logistic Regression multi-class classification
+- Confidence/probability display
+- Flask web application
+- 17 supported languages
 
 Supported languages: **English, Malayalam, Hindi, Tamil, Portuguese,
 French, Dutch, Spanish, Greek, Russian, Danish, Italian, Turkish,
@@ -22,7 +22,7 @@ Swedish, Arabic, German, Kannada.**
 > The dataset contains the labels `Portugeese` and `Sweedish`; these
 > labels are retained for compatibility with the original dataset.
 
-------------------------------------------------------------------------
+---
 
 ## 🎯 Objectives
 
@@ -35,7 +35,7 @@ Swedish, Arabic, German, Kannada.**
 7.  Deploy the trained model through Flask.
 8.  Extend the system with OCR so image text can also be classified.
 
-------------------------------------------------------------------------
+---
 
 # 🧠 NLP Concepts Used
 
@@ -45,7 +45,7 @@ Natural Language Processing enables computers to process human language.
 This project is an NLP application because it receives human language
 and predicts the language to which the text belongs.
 
-``` text
+```text
 Natural Language → Text Processing → Features → ML → Language
 ```
 
@@ -59,14 +59,14 @@ syntactic, semantic, or pragmatic understanding.
 
 The `clean()` function performs:
 
--   punctuation removal
--   number removal
--   lowercasing
--   whitespace normalization
+- punctuation removal
+- number removal
+- lowercasing
+- whitespace normalization
 
 Example:
 
-``` text
+```text
 "Guten Morgen, Wie GEHT es Dir?"
               ↓
 "guten morgen wie geht es dir"
@@ -76,7 +76,7 @@ Example:
 
 Regular expressions are used to remove numerical patterns:
 
-``` python
+```python
 re.sub(r"\d+", "", text)
 ```
 
@@ -96,7 +96,7 @@ characteristic spelling and character-combination patterns.
 An n-gram is a sequence of consecutive units. The final model uses
 character n-grams from length 1 to 5:
 
-``` python
+```python
 TfidfVectorizer(
     analyzer="char",
     ngram_range=(1, 5),
@@ -116,7 +116,7 @@ For example, `German` can generate features such as `G`, `Ge`, `Ger`,
 Raw text must be converted into numerical features before machine
 learning:
 
-``` text
+```text
 Raw Text → Preprocessing → Character N-Grams → TF-IDF → Feature Vector
 ```
 
@@ -137,7 +137,7 @@ from the training corpus.
 
 The central task is **17-class text classification**:
 
-``` text
+```text
 Input text → Classifier → One of 17 language labels
 ```
 
@@ -146,7 +146,7 @@ Input text → Classifier → One of 17 language labels
 The final classifier is **Logistic Regression**. It receives the TF-IDF
 feature vector and predicts one of the language classes.
 
-``` text
+```text
 Text → Cleaning → Character N-Grams → TF-IDF → Logistic Regression → Language
 ```
 
@@ -154,7 +154,7 @@ Text → Cleaning → Character N-Grams → TF-IDF → Logistic Regression → L
 
 The application uses:
 
-``` python
+```python
 model.predict_proba()
 ```
 
@@ -165,7 +165,7 @@ the prediction confidence.
 
 The project uses an 80/20 train-test split:
 
-``` python
+```python
 train_test_split(
     X,
     y,
@@ -183,17 +183,17 @@ The primary evaluation metric currently used is **accuracy**.
 
 The final model achieved approximately:
 
-``` text
+```text
 98.79% test accuracy
 ```
 
 Accuracy is:
 
-``` text
+```text
 Correct Predictions / Total Predictions × 100
 ```
 
-------------------------------------------------------------------------
+---
 
 # 🖼️ OCR + NLP Integration
 
@@ -201,7 +201,7 @@ OCR means **Optical Character Recognition**. OCR itself is an
 image/document-processing technique rather than an NLP technique. In
 this project it acts as the input layer for the NLP system.
 
-``` text
+```text
 Image
   ↓
 Tesseract OCR
@@ -221,7 +221,7 @@ Detected Language
 
 Example:
 
-``` text
+```text
 Image: "Bonjour, comment allez-vous?"
                  ↓ OCR
 "Bonjour, comment allez-vous?"
@@ -229,7 +229,7 @@ Image: "Bonjour, comment allez-vous?"
 French
 ```
 
-------------------------------------------------------------------------
+---
 
 # 📚 Mumbai University NLP Topic Mapping
 
@@ -237,90 +237,94 @@ The University of Mumbai NLP curriculum includes NLP fundamentals,
 levels of NLP, text preprocessing, regular expressions, n-grams, text
 classification, feature extraction, statistical methods and evaluation.
 
-  -----------------------------------------------------------------------
-  NLP Topic               Used?                   How it appears in this
-                                                  project
-  ----------------------- ----------------------- -----------------------
-  Introduction to NLP     ✅                      Language identification
+---
 
-  Generic NLP System      ✅                      Input → preprocessing →
-                                                  features → classifier →
-                                                  output
+NLP Topic Used? How it appears in this
+project
 
-  Levels of NLP           ✅ Partially            Character/statistical
-                                                  processing
+---
 
-  Text Preprocessing      ✅                      Cleaning and
-                                                  normalization
+Introduction to NLP ✅ Language identification
 
-  Regular Expressions     ✅                      Number removal
+Generic NLP System ✅ Input → preprocessing →
+features → classifier →
+output
 
-  Tokenization            ⚠️ Not directly         Character n-grams are
-                                                  used instead
+Levels of NLP ✅ Partially Character/statistical
+processing
 
-  Segmentation            ⚠️ Related              Character n-gram
-                                                  segmentation
+Text Preprocessing ✅ Cleaning and
+normalization
 
-  Morphological Analysis  ❌                      Not required
+Regular Expressions ✅ Number removal
 
-  Lemmatization           ❌                      Not required
+Tokenization ⚠️ Not directly Character n-grams are
+used instead
 
-  Stemming                ❌                      Not required
+Segmentation ⚠️ Related Character n-gram
+segmentation
 
-  N-Grams                 ✅                      Character 1--5 grams
+Morphological Analysis ❌ Not required
 
-  N-Gram Language Model   ❌                      N-grams are features,
-                                                  not a generative model
+Lemmatization ❌ Not required
 
-  Bag of Words            ❌ Final model          TF-IDF character
-                                                  features are used
+Stemming ❌ Not required
 
-  TF-IDF                  ✅                      Feature weighting
+N-Grams ✅ Character 1--5 grams
 
-  Statistical NLP         ✅                      Statistical language
-                                                  classification
+N-Gram Language Model ❌ N-grams are features,
+not a generative model
 
-  Text Classification     ✅                      17-class language
-                                                  detection
+Bag of Words ❌ Final model TF-IDF character
+features are used
 
-  Naive Bayes             ❌ Final model          Explored in the
-                                                  original notebook, but
-                                                  the deployed model uses
-                                                  Logistic Regression
+TF-IDF ✅ Feature weighting
 
-  Logistic Regression     ✅                      Final classifier
+Statistical NLP ✅ Statistical language
+classification
 
-  Probability             ✅                      `predict_proba()`
+Text Classification ✅ 17-class language
+detection
 
-  Model Evaluation        ✅                      Test accuracy
+Naive Bayes ❌ Final model Explored in the
+original notebook, but
+the deployed model uses
+Logistic Regression
 
-  Precision/Recall/F1     ❌ Currently            Future improvement
+Logistic Regression ✅ Final classifier
 
-  Confusion Matrix        ❌ Currently            Future improvement
+Probability ✅ `predict_proba()`
 
-  POS Tagging             ❌                      Not required
+Model Evaluation ✅ Test accuracy
 
-  HMM                     ❌                      Not required
+Precision/Recall/F1 ❌ Currently Future improvement
 
-  Semantic Analysis       ❌                      No semantic
-                                                  understanding is
-                                                  required
+Confusion Matrix ❌ Currently Future improvement
 
-  WordNet                 ❌                      Not required
+POS Tagging ❌ Not required
 
-  Word Sense              ❌                      Not required
-  Disambiguation                                  
+HMM ❌ Not required
 
-  Pragmatics              ❌                      Not required
+Semantic Analysis ❌ No semantic
+understanding is
+required
 
-  NLP Applications        ✅                      Language identification
-  -----------------------------------------------------------------------
+WordNet ❌ Not required
 
-------------------------------------------------------------------------
+Word Sense ❌ Not required
+Disambiguation
+
+Pragmatics ❌ Not required
+
+NLP Applications ✅ Language identification
+
+---
+
+---
 
 # 🔬 Complete NLP Pipeline
 
-``` text
+```text
 User Text
     ↓
 Text Normalization
@@ -344,11 +348,11 @@ Logistic Regression
 Language + Confidence
 ```
 
-------------------------------------------------------------------------
+---
 
 # 🌐 Web Application Architecture
 
-``` text
+```text
                      FRONTEND
                  HTML + CSS + JS
                        │
@@ -375,34 +379,34 @@ Language + Confidence
 
 ### Flask endpoints
 
-``` text
+```text
 POST /predict
 POST /predict-image
 ```
 
-------------------------------------------------------------------------
+---
 
 # 📊 Dataset
 
 The project uses `Language Detection.csv`.
 
-``` text
+```text
 10,337 text samples
 17 language classes
 ```
 
 Main columns:
 
-``` text
+```text
 Text
 Language
 ```
 
-------------------------------------------------------------------------
+---
 
 # 🤖 Model Training
 
-``` text
+```text
 Language Detection.csv
         ↓
 Load Dataset
@@ -422,7 +426,7 @@ Save Model
 
 Generated files:
 
-``` text
+```text
 model.pkl
 vectorizer.pkl
 ```
@@ -432,11 +436,11 @@ fitted TF-IDF feature extractor. The same fitted vectorizer must be used
 for new input so that features have the same representation as during
 training.
 
-------------------------------------------------------------------------
+---
 
 # 📁 Project Structure
 
-``` text
+```text
 NLP-Language-Detection-main/
 │
 ├── Language Detection.csv
@@ -456,123 +460,125 @@ NLP-Language-Detection-main/
 └── uploads/
 ```
 
-  File                                 Purpose
-  ------------------------------------ --------------------------------------
-  `Language Detection.csv`             Training dataset
-  `Language_Detection_Github_.ipynb`   Original NLP notebook
-  `train_model.py`                     Trains and saves the final model
-  `model.pkl`                          Saved Logistic Regression classifier
-  `vectorizer.pkl`                     Saved TF-IDF vectorizer
-  `app.py`                             Flask backend and prediction API
-  `templates/index.html`               Web interface
-  `static/style.css`                   Frontend styling
-  `uploads/`                           Image-upload workspace
+File Purpose
 
-------------------------------------------------------------------------
+---
+
+`Language Detection.csv` Training dataset
+`Language_Detection_Github_.ipynb` Original NLP notebook
+`train_model.py` Trains and saves the final model
+`model.pkl` Saved Logistic Regression classifier
+`vectorizer.pkl` Saved TF-IDF vectorizer
+`app.py` Flask backend and prediction API
+`templates/index.html` Web interface
+`static/style.css` Frontend styling
+`uploads/` Image-upload workspace
+
+---
 
 # ⚙️ Installation
 
-``` bash
+```bash
 pip3 install pandas scikit-learn flask pytesseract pillow
 ```
 
 On macOS with Homebrew:
 
-``` bash
+```bash
 brew install tesseract
 brew install tesseract-lang
 ```
 
 Check:
 
-``` bash
+```bash
 tesseract --version
 ```
 
-------------------------------------------------------------------------
+---
 
 # ▶️ Running the Project
 
 ### 1. Train the model
 
-``` bash
+```bash
 python3 train_model.py
 ```
 
 This creates:
 
-``` text
+```text
 model.pkl
 vectorizer.pkl
 ```
 
 ### 2. Start Flask
 
-``` bash
+```bash
 python3 app.py
 ```
 
 ### 3. Open the website
 
-``` text
+```text
 http://127.0.0.1:5000
 ```
 
-------------------------------------------------------------------------
+---
 
 # 🧪 Example Inputs
 
 ### English
 
-``` text
+```text
 Hello, how are you today?
 ```
 
 ### French
 
-``` text
+```text
 Bonjour, comment allez-vous?
 ```
 
 ### German
 
-``` text
+```text
 Guten Morgen, wie geht es dir?
 ```
 
 ### Spanish
 
-``` text
+```text
 Hola, ¿cómo estás?
 ```
 
 ### Russian
 
-``` text
+```text
 Привет, как дела?
 ```
 
 ### Italian
 
-``` text
+```text
 Ciao, come stai?
 ```
 
-------------------------------------------------------------------------
+---
 
 # 📈 Results
 
 The final TF-IDF character n-gram + Logistic Regression model achieved
 approximately:
 
-``` text
+```text
 98.79% test accuracy
 ```
 
 The model was also manually tested with examples from several supported
 languages.
 
-------------------------------------------------------------------------
+---
 
 # ⚠️ Limitations
 
@@ -589,44 +595,44 @@ languages.
 7.  Confidence is a model probability, not a guarantee of real-world
     correctness.
 
-------------------------------------------------------------------------
+---
 
 # 🚀 Future Improvements
 
--   Precision, Recall and F1-score
--   Confusion matrix
--   Per-language performance analysis
--   Better short-text handling
--   Language-specific OCR configuration
--   Automatic OCR language selection
--   Mixed-language detection
--   Drag-and-drop image upload
--   PDF text extraction
--   REST API deployment
--   Cloud deployment
--   Character CNN/RNN language identification
--   Transformer-based language identification
+- Precision, Recall and F1-score
+- Confusion matrix
+- Per-language performance analysis
+- Better short-text handling
+- Language-specific OCR configuration
+- Automatic OCR language selection
+- Mixed-language detection
+- Drag-and-drop image upload
+- PDF text extraction
+- REST API deployment
+- Cloud deployment
+- Character CNN/RNN language identification
+- Transformer-based language identification
 
-------------------------------------------------------------------------
+---
 
 # 🎓 Academic Relevance
 
 This project demonstrates practical use of:
 
--   NLP fundamentals
--   Text preprocessing
--   Text normalization
--   Regular expressions
--   Character-level representation
--   N-grams
--   Feature extraction
--   TF-IDF
--   Statistical NLP
--   Multi-class text classification
--   Probability-based prediction
--   Train/test evaluation
--   NLP application development
--   OCR-to-NLP integration
+- NLP fundamentals
+- Text preprocessing
+- Text normalization
+- Regular expressions
+- Character-level representation
+- N-grams
+- Feature extraction
+- TF-IDF
+- Statistical NLP
+- Multi-class text classification
+- Probability-based prediction
+- Train/test evaluation
+- NLP application development
+- OCR-to-NLP integration
 
 It connects NLP theory with a working real-world application.
 
@@ -638,25 +644,25 @@ semantic analysis, WordNet, Word Sense Disambiguation and pragmatics are
 not required for this language-identification problem and are therefore
 not claimed as implemented features.
 
-------------------------------------------------------------------------
+---
 
 # 📚 References
 
--   University of Mumbai --- Natural Language Processing syllabus
--   Daniel Jurafsky & James H. Martin --- *Speech and Language
-    Processing*
--   Christopher D. Manning & Hinrich Schütze --- *Foundations of
-    Statistical Natural Language Processing*
--   Scikit-learn --- TF-IDF and Logistic Regression
--   Tesseract OCR
+- University of Mumbai --- Natural Language Processing syllabus
+- Daniel Jurafsky & James H. Martin --- _Speech and Language
+  Processing_
+- Christopher D. Manning & Hinrich Schütze --- _Foundations of
+  Statistical Natural Language Processing_
+- Scikit-learn --- TF-IDF and Logistic Regression
+- Tesseract OCR
 
-------------------------------------------------------------------------
+---
 
 # 👨‍💻 Project Summary
 
 The core NLP idea is:
 
-``` text
+```text
 Human Language
       ↓
 Preprocessing
@@ -672,7 +678,7 @@ Language Classification
 
 The image extension adds:
 
-``` text
+```text
 Image
   ↓
 OCR
@@ -687,3 +693,121 @@ Language
 Thus, the project combines **NLP preprocessing, statistical feature
 extraction, machine-learning classification, OCR and web deployment**
 into one complete application.
+
+## 🌍 Real-World Applications
+
+Language detection is widely used in applications where systems need to automatically identify the language of user-provided text. The following are some practical applications of this project:
+
+### 1. 🌐 Multilingual Websites
+
+Language detection can automatically identify the language entered by a user and help websites provide appropriate content or language options.
+
+**Example:** A website can detect whether a user is writing in English, French, German, or Hindi and display the appropriate language interface.
+
+---
+
+### 2. 💬 Chatbots and Virtual Assistants
+
+Chatbots can use language detection to identify the language of a user's message before processing it.
+
+**Example:** A customer-support chatbot can detect whether a customer is asking a question in English, Spanish, or French and route the message to the appropriate language-processing system.
+
+---
+
+### 3. 🌎 Machine Translation
+
+Language detection is an important first step in automatic translation systems. Before translating text, the system needs to determine the source language.
+
+**Example:** A translation application can detect German text and automatically select German as the source language before translating it into English.
+
+---
+
+### 4. 📱 Social Media and Messaging Applications
+
+Social media platforms and messaging applications receive text in many different languages. Language detection can help identify the language of posts and messages.
+
+**Example:** A platform can detect the language of a post and use this information for translation, content organization, or language-specific recommendations.
+
+---
+
+### 5. 📧 Email and Document Processing
+
+Organizations receive emails and documents from users around the world. Language detection can automatically determine the language before further processing.
+
+**Example:** A company can detect the language of incoming customer emails and forward them to the appropriate support team.
+
+---
+
+### 6. 🔍 Search Engines
+
+Search systems can use language detection to understand the language of a search query and provide more relevant results.
+
+**Example:** If a user enters a query in Hindi, the system can identify Hindi and prioritize Hindi-language results.
+
+---
+
+### 7. 📰 News and Content Categorization
+
+News websites and content-management systems can use language detection to automatically classify articles according to their language.
+
+**Example:** An international news platform can automatically separate English, French, German, and Spanish articles.
+
+---
+
+### 8. 📄 OCR and Scanned Document Processing
+
+The image feature of this project combines **OCR (Optical Character Recognition)** with language detection. Text is first extracted from an image and then passed to the NLP model.
+
+**Example:** A scanned document, photograph, poster, or sign can be processed to extract its text and identify the language automatically.
+
+**Pipeline:**
+
+`Image → OCR → Extracted Text → Text Preprocessing → TF-IDF → Logistic Regression → Language`
+
+---
+
+### 9. 🏢 Customer Support Systems
+
+Large organizations receive customer requests in multiple languages. Automatic language detection can help classify incoming requests and route them to the correct department.
+
+**Example:** A support system can identify whether a customer request is written in English, Hindi, German, or another supported language.
+
+---
+
+### 10. 🗂️ Automatic Document Organization
+
+Language detection can be used to automatically organize large collections of multilingual documents.
+
+**Example:** A company can scan thousands of documents and group them into English, French, German, Hindi, and other language categories.
+
+---
+
+### 11. 🎓 Educational Applications
+
+Language detection can be used in educational platforms to identify the language used by students and provide appropriate learning resources.
+
+**Example:** An online learning platform can detect the language of a student's input and provide relevant instructions or resources.
+
+---
+
+### 12. 🔐 Content Moderation and Filtering
+
+Language identification can help content-moderation systems determine which language a piece of content is written in before applying language-specific processing.
+
+**Example:** A platform can identify the language of a user comment and send it to the appropriate moderation or NLP pipeline.
+
+---
+
+## 💡 How This Project Can Be Used
+
+This project demonstrates a simplified version of a real-world multilingual NLP pipeline.
+
+For **text input**, the system:
+
+`User Text → Preprocessing → Character N-Grams → TF-IDF → Logistic Regression → Detected Language`
+
+For **image input**, the system:
+
+`Image → Tesseract OCR → Extracted Text → Preprocessing → Character N-Grams → TF-IDF → Logistic Regression → Detected Language`
+
+The project therefore demonstrates how **NLP, Machine Learning, and OCR can be combined** to solve a practical language-identification problem.
